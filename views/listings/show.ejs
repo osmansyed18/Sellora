@@ -1,0 +1,178 @@
+<% layout("/layouts/boilerplate") %>
+<div class="row mt-3">
+  <div class="col-lg-8 offset-lg-3 col-12">
+    <h4><%= listing.title %></h4>
+  </div>
+  <div class="card col-lg-6 offset-lg-3 col-12 show-card listing-card">
+    <div class="card listing-card">
+      <img
+        src="<%= listing.image.url %>"
+        class="card-img-top show-img"
+        alt="listing img"
+      />
+      <div class="card-body">
+        <p class="card-text">Owned by <i><%= listing.owner ? listing.owner.username : 'Unknown' %> </i></p>
+        <p class="card-text"><%= listing.description %></p>
+        <p class="card-text">
+          &#8377;<%= listing.price.toLocaleString("en-IN") %>
+        </p>
+        <p class="card-text"><%= listing.location %></p>
+        <p class="card-text"><%= listing.country %></p>
+      </div>
+    </div>
+  </div>
+
+  <br />
+  <% if (currUser && listing.owner && currUser._id.equals(listing.owner._id)) { %>
+  <div class="btns col-lg-6 offset-lg-3 col-12 show-btns">
+    <a
+      href="/listings/<%= listing._id %>/edit"
+      class="btn btn-dark edit-btn"
+      >Edit</a
+    >
+    <form
+      method="POST"
+      action="/listings/<%= listing._id %>/delete/?_method=DELETE"
+    >
+      <button class="btn btn-dark">Delete</button>
+    </form>
+  </div>
+  <% } %>
+  <div class="col-lg-8 offset-lg-3 col-12 mb-3">
+    <hr />
+    <% if (currUser) { %>
+
+    <h4>Ask a Question or Leave Review</h4>
+    <form
+      action="/listings/<%= listing.id %>/reviews"
+      method="post"
+      novalidate
+      class="needs-validation"
+    >
+      <div class="mb-3 mt-3">
+        <label for="rating" class="form-label">Rating</label>
+        <fieldset class="starability-slot">
+          <input
+            type="radio"
+            id="no-rate"
+            class="input-no-rate"
+            name="review[rating]"
+            value="1"
+            checked
+            aria-label="No rating."
+          />
+          <input
+            type="radio"
+            id="first-rate1"
+            name="review[rating]"
+            value="1"
+          />
+          <label for="first-rate1" title="Terrible">1 star</label>
+          <input
+            type="radio"
+            id="first-rate2"
+            name="review[rating]"
+            value="2"
+          />
+          <label for="first-rate2" title="Not good">2 stars</label>
+          <input
+            type="radio"
+            id="first-rate3"
+            name="review[rating]"
+            value="3"
+          />
+          <label for="first-rate3" title="Average">3 stars</label>
+          <input
+            type="radio"
+            id="first-rate4"
+            name="review[rating]"
+            value="4"
+          />
+          <label for="first-rate4" title="Very good">4 stars</label>
+          <input
+            type="radio"
+            id="first-rate5"
+            name="review[rating]"
+            value="5"
+          />
+          <label for="first-rate5" title="Amazing">5 stars</label>
+        </fieldset>
+      </div>
+
+      <div class="mb-3 mt-3">
+        <label for="comment" class="form-label">Comments</label>
+        <textarea
+          name="review[comment]"
+          id="comment"
+          cols="30"
+          rows="5"
+          class="form-control"
+          required
+        ></textarea>
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Review Should be valid.</div>
+      </div>
+
+      <button class="btn btn-outline-dark">Submit</button>
+    </form>
+    <hr />
+    <h4>All Reviews</h4>
+    <% } %> <% if(listing.reviews.length >= 3 && listing.aiOverview) { %>
+    <div class="card mt-4 shadow-sm mb-3">
+      <div class="card-body overviewCard">
+        <h5 class="card-title">AI Overview</h5>
+        <p class="card-text"><%= listing.aiOverview %></p>
+
+        <% if(listing.aiOverviewUpdatedAt) { %>
+        <small class="text-muted">
+          Last updated: <%= listing.aiOverviewUpdatedAt.toDateString() %>
+        </small>
+        <% } %>
+      </div>
+    </div>
+    <% } %>
+
+    <div class="row">
+      <% for (review of listing.reviews) { %>
+      <div class="card col-lg-5 col-12 ms-3 mb-3">
+        <div class="card-body">
+          <h5 class="card-title">@<%= review.author.username %></h5>
+          <p class="card-text"><%= review.comment %></p>
+          <p
+            class="starability-result card-text"
+            data-rating="<%= review.rating %>"
+          ></p>
+          <form
+            method="post"
+            action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"
+          >
+            <button class="btn btn-sm btn-dark mb-2">Delete</button>
+          </form>
+        </div>
+      </div>
+      <% } %>
+    </div>
+  </div>
+  <div class="col-lg-8 offset-lg-3 col-12 mb-3">
+    <h4>Item Location</h4>
+
+    <% if(listing.geometry && listing.geometry.coordinates &&
+    listing.geometry.coordinates.length === 2) { %>
+
+    <div
+      id="map"
+      data-coords="<%- JSON.stringify(listing.geometry.coordinates) %>"
+      data-title="<%= listing.title %>"
+      data-location="<%= listing.location %>"
+      style="height: 350px; width: 100%; border-radius: 12px"
+      class="mb-4"
+    ></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="/js/map.js"></script>
+
+    <% } else { %>
+    <p class="text-muted mb-4">Map location not available.</p>
+    <% } %>
+  </div>
+</div>
