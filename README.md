@@ -9,9 +9,6 @@
 
 Whether you're looking to sell unused items or find great deals on pre-owned products, Sellora connects buyers and sellers in a trusted community.
 
-## 🌐 Live Demo
-
-
 ## ✨ Features
 
 - **User Authentication**: Secure signup, login, and session management using Passport.js.
@@ -72,7 +69,7 @@ Before running the application, ensure you have the following installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/ShaikAnwargithub/Sellora.git
+git clone https://github.com/osmansyed18/Sellora.git
 cd Sellora
 ```
 
