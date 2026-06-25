@@ -11,7 +11,6 @@ Whether you're looking to sell unused items or find great deals on pre-owned pro
 
 ## 🌐 Live Demo
 
-Experience Sellora live! The application is deployed on Render: [https://sellora-demo.onrender.com](https://sellora-demo.onrender.com)
 
 ## ✨ Features
 
